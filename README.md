@@ -1,6 +1,4 @@
-#Remote Branch
-#First Commit
-#Full Stack API Final Project
+# Full Stack API Final Project
 
 ## Full Stack Trivia
 
