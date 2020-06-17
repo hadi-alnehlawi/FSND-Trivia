@@ -54,7 +54,7 @@ def create_app(test_config=None):
   Clicking on the page numbers should update the questions.
   '''
   # Pagination  QUESTION  helper'
-  question_per_page = 5
+  question_per_page = 10
   def pagination_questions(request,selections):
       page = request.args.get('page',1,type=int)
       start = (page - 1) * question_per_page
@@ -71,13 +71,20 @@ def create_app(test_config=None):
        categories = {category.id:category.type for category in all_categories}
        return jsonify({ "questions":paginate_questions,
        "total_questions":len(all_questions),"categories":categories , "current_category":None })
-
   '''
   @TODO:
   Create an endpoint to DELETE question using a question ID.
   TEST: When you click the trash icon next to a question, the question will be removed.
   This removal will persist in the database and when you refresh the page.
   '''
+  @app.route('/questions/<int:question_id>',methods=['GET'])
+  def delete_question(question_id):
+      question_to_delete = Question.query.filter_by(id=question_id).one_or_none()
+      if question_to_delete:
+          question.delete()
+          return jsonify({"question_to_delete" :question_to_delete.format()})
+      else:
+          abort(404)
 
   '''
   @TODO:
@@ -89,6 +96,23 @@ def create_app(test_config=None):
   the form will clear and the question will appear at the end of the last page
   of the questions list in the "List" tab.
   '''
+  @app.route('/qustions/',methods=['POST'])
+  def create_question():
+      print('HIIIIIIIIIIIIIIIIIIIIIIIIII')
+      body = request.get_json()
+
+      new_question = body.get('question',None)
+      new_category = body.get('category',None)
+      new_difficulty = body.get('difficulty',None)
+      new_answer = body.get('answer',None)
+      try:
+          question = Question(question=new_question,answer=new_answer,category=new_category,difficulty=new_difficulty)
+          quesiton.insert()
+          return jsonify({'success':True, 'question': question.format()})
+      except :
+          abort(422)
+
+
 
   '''
   @TODO:
@@ -128,5 +152,8 @@ def create_app(test_config=None):
   Create error handlers for all expected errors
   including 404 and 422.
   '''
+  @app.errorhandler(404)
+  def error_handler_404(error):
+      return jsonify({"success":False, 'error':404, "message":"bad request, the resouse could not be found"})
 
   return app
