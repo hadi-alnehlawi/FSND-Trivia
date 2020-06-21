@@ -78,11 +78,11 @@ class QuestionView extends Component {
 
   submitSearch = (searchTerm) => {
     $.ajax({
-      url: `http://localhost:5000/questions`, //TODO: update request URL
+      url: `http://localhost:5000/questions/search_term`, //TODO: update request URL
       type: "POST",
       dataType: 'json',
       contentType: 'application/json',
-      data: JSON.stringify({searchTerm: searchTerm}),
+        data: JSON.stringify({searchTerm:searchTerm}),
       xhrFields: {
         withCredentials: true
       },
