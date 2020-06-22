@@ -16,18 +16,15 @@ def create_app(test_config=None):
     '''
     @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
     '''
-    CORS(app)
+    CORS(app,resources={r'*':{'origins':'*'}})
 
-    @app.route('/hello')
-    def hello():
-      return jsonify({"message":"hello"})
 
     '''
     @TODO: Use the after_request decorator to set Access-Control-Allow
     '''
     @app.after_request
     def after_request(response):
-      response.headers.add('Access-Control-Allow-Header',"Content-Type, Authorizations")
+      response.headers.add('Access-Control-Allow-Header',"Content-Type, Authorizations,True")
       response.headers.add('Access-Control-Allow-Methods',"GET, POST, PATCH, DELETE, OPTIONS")
       return response
 
@@ -115,6 +112,8 @@ def create_app(test_config=None):
     the form will clear and the question will appear at the end of the last page
     of the questions list in the "List" tab.
     '''
+
+
     @app.route('/questions', methods=['POST'])
     def create_question():
       body = request.get_json()
@@ -125,7 +124,8 @@ def create_app(test_config=None):
       try:
           question = Question(question=new_question,answer=new_answer,category=new_category,difficulty=new_difficulty)
           question.insert()
-          return jsonify({'success':True, 'question': question.format()})
+          return jsonify({'success':True, 'question': new_question, 'answer':new_answer,
+          'difficulty':new_difficulty,'category':new_category})
       except :
           abort(422)
 
