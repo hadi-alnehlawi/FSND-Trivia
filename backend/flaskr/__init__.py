@@ -41,11 +41,11 @@ def create_app(test_config=None):
     Clicking on the page numbers should update the questions.
     '''
     # Pagination helper'
-    items_per_page = 10
+    questions_per_page = 10
     def pagination(request,selections):
       page = request.args.get('page',1,type=int)
-      start = (page - 1) * items_per_page
-      end = start + items_per_page
+      start = (page - 1) * questions_per_page
+      end = start + questions_per_page
       items = [item.format() for item in selections]
       return items[start:end]
 
@@ -62,17 +62,17 @@ def create_app(test_config=None):
     # GET: /questions<question_id>
     @app.route('/questions/<int:question_id>', methods=["GET"])
     def get_questions_by_id(question_id):
-       all_questions = Question.query.filter_by(id=question_id).one_or_none()
-       if all_questions is None:
+       question = Question.query.filter_by(id=question_id).one_or_none()
+       if question is None:
            abort(404)
        else:
            all_categories = Category.query.order_by(Category.id).all()
-           paginate_questions = pagination(request,all_questions)
+           # paginate_questions = pagination(request,all_questions)
            categories = {category.id:category.type for category in all_categories}
 
-           return jsonify({ "questions":paginate_questions,
-           "total_questions":len(all_questions),"categories":categories , "current_category":None })
-
+           return jsonify({ "questions":question.format(),
+           "categories":categories , "current_category":None })
+# "total_questions":len(question),
     '''
     @TODO:
     Create an endpoint to handle GET requests
