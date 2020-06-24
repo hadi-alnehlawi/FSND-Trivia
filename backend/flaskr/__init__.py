@@ -191,8 +191,8 @@ def create_app(test_config=None):
         header = request.get_json()
         previous_questions =  header.get('previous_questions')
         quiz_category =  header.get('quiz_category')
-        qusetions = Question.query.filter(Question.category==quiz_category).all()
-        category = Category.query.filter(Category.id==quiz_category).all()
+        qusetions = Question.query.filter(Question.category==quiz_category['id']).all()
+        category = Category.query.filter(Category.id==quiz_category['id']).all()
         if not qusetions:
             abort(404)
         else:
