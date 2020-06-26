@@ -103,8 +103,8 @@ def create_app(test_config=None):
     @app.route('/questions/<int:question_id>', methods=['DELETE'])
     def delete_question(question_id):
         try:
-            question_to_delete = Question.query.filter_by(id=question_id)
-            .one_or_none()
+            question_to_delete = Question.query.filter_by(
+                                id=question_id).one_or_none()
             if question_to_delete:
                 question_to_delete.delete()
                 return jsonify({"question_to_delete":
@@ -131,7 +131,7 @@ def create_app(test_config=None):
         new_category = body.get('category', None)
         new_difficulty = body.get('difficulty', None)
         new_answer = body.get('answer', None)
-        try Exception:
+        try:
             question = Question(question=new_question,
                                 answer=new_answer,
                                 category=new_category,
