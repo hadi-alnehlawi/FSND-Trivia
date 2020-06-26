@@ -191,14 +191,19 @@ def create_app(test_config=None):
         header = request.get_json()
         previous_questions =  header.get('previous_questions')
         quiz_category =  header.get('quiz_category')
-        qusetions = Question.query.filter(Question.category==quiz_category['id']).all()
-        category = Category.query.filter(Category.id==quiz_category['id']).all()
+        #  case when ALL is clicked
+        if quiz_category['id'] == 0:
+            qusetions = Question.query.order_by(Question.id).all()
+            success = True
+            category = Category.query.filter(Category.id==quiz_category['id']).all()
+        else:
+            qusetions = Question.query.filter(Question.category==quiz_category['id']).all()
+            category = Category.query.filter(Category.id==quiz_category['id']).all()
         if not qusetions:
             abort(404)
         else:
             question_id = randint(0,len(qusetions)-1)
             return jsonify({"question": qusetions[question_id].format()})
-
 
     '''
     @TODO:
