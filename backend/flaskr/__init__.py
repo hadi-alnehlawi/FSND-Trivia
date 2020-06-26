@@ -102,17 +102,14 @@ def create_app(test_config=None):
     '''
     @app.route('/questions/<int:question_id>', methods=['DELETE'])
     def delete_question(question_id):
+        question_to_delete = Question.query.filter_by(
+                            id=question_id).one_or_none()
         try:
-            question_to_delete = Question.query.filter_by(
-                                id=question_id).one_or_none()
-            if question_to_delete:
-                question_to_delete.delete()
-                return jsonify({"question_to_delete":
-                                question_to_delete.format()})
-            else:
-                abort(404)
+            question_to_delete.delete()
+            return jsonify({"success": True, "question_to_delete":
+                            question_to_delete.format()})
         except Exception:
-            abort(422)
+            abort(404)
     '''
     @TODO:
     Create an endpoint to POST a new question,
@@ -138,6 +135,7 @@ def create_app(test_config=None):
                                 difficulty=new_difficulty)
             question.insert()
             return jsonify({'success': True,
+                            'question_id': question.id,
                             'question': new_question,
                             'answer': new_answer,
                             'difficulty': new_difficulty,
