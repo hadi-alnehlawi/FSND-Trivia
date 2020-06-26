@@ -194,7 +194,6 @@ def create_app(test_config=None):
         #  case when ALL is clicked
         if quiz_category['id'] == 0:
             qusetions = Question.query.order_by(Question.id).all()
-            success = True
             category = Category.query.filter(Category.id==quiz_category['id']).all()
         else:
             qusetions = Question.query.filter(Question.category==quiz_category['id']).all()
@@ -203,6 +202,10 @@ def create_app(test_config=None):
             abort(404)
         else:
             question_id = randint(0,len(qusetions)-1)
+            while(question_id in previous_questions):
+                question_id = randint(0,len(qusetions)-1)
+                if question_id not in previous_questions:
+                    break
             return jsonify({"question": qusetions[question_id].format()})
 
     '''
