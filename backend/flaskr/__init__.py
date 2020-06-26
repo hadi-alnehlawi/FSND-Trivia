@@ -6,7 +6,7 @@ from random import randint
 
 from models import setup_db, Question, Category
 
-QUESTIONS_PER_PAGE = 10
+
 
 def create_app(test_config=None):
     # create and configure the app
@@ -144,7 +144,7 @@ def create_app(test_config=None):
         body = request.get_json()
         search_term = body.get('searchTerm',None)
         look_for = '%{0}%'.format(search_term)
-        questions = Question.query.filter(Question.question.like(look_for)).all()
+        questions = Question.query.filter(Question.question.ilike(look_for)).all()
         if not questions:
             abort(404)
         else:
@@ -209,4 +209,7 @@ def create_app(test_config=None):
     def error_handler_404(error):
       return jsonify({"success":False, 'error':404, "message":"bad request, the resouse could not be found"})
 
+    @app.errorhandler(422)
+    def error_handerl_422(error):
+        return jsonify({"succes":False,'error':422,"message":"bad request, unprocessable entity"})
     return app
