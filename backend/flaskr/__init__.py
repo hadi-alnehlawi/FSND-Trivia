@@ -54,13 +54,21 @@ def create_app(test_config=None):
         all_questions = Question.query.order_by(Question.id).all()
         all_categories = Category.query.order_by(Category.id).all()
         paginate_questions = pagination(request, all_questions)
+        all_current_category_id = [question.get('category') for question in
+                                   paginate_questions]
+        uniqe_current_category_id = [category for category in set(
+                                 all_current_category_id)]
         categories = {
-                     category.id: category.type for category in all_categories
+                     category.id: category.type for category in
+                     all_categories
                      }
+        current_categories = [
+                    category_id for category_id in
+                    uniqe_current_category_id]
         return jsonify({"questions": paginate_questions,
                         "total_questions": len(all_questions),
                         "categories": categories,
-                        "current_category": None})
+                        "current_category": current_categories})
 
     # GET: /questions<question_id>
     @app.route('/questions/<int:question_id>', methods=["GET"])

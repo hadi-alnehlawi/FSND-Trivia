@@ -87,6 +87,7 @@ class TriviaTestCase(unittest.TestCase):
         data = response.get_json()
         self.assertEqual(data['error'], 404)
         self.assertEqual(data["success"], False)
+
     def test_post_questions_405(self):
         requests_body = dict(
                 answer="my name is Hadi",
