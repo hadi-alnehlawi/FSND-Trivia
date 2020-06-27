@@ -116,6 +116,22 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['error'], 404)
 
+    def test_quizzes_get_200(self):
+        quesiton_id = Question.query.filter_by(
+                      question=self.request_body.get('question')).first().id
+        requests_body = dict(previous_questions=str(quesiton_id),
+                             quiz_category=dict(id="1", type="Science"))
+        response = self.client().post('/quizzes', json=requests_body)
+        self.assertEqual(response.status_code, 200)
+
+    def test_quizzes_get_404(self):
+        quesiton_id = "100000"
+        requests_body = dict(previous_questions=str(quesiton_id),
+                             quiz_category=dict(id="1", type="Science"))
+        response = self.client().post('/quizzes', json=requests_body)
+        data = response.get_json()
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['error'], 404)
 
 # Make the tests conveniently executable
 if __name__ == "__main__":

@@ -237,9 +237,11 @@ def create_app(test_config=None):
             abort(404)
         else:
             question_id = randint(0, len(qusetions)-1)
-            while(question_id in previous_questions):
+            previous_question_id = [int(question) for question in
+                                    previous_questions]
+            while(question_id in previous_question_id):
                 question_id = randint(0, len(qusetions)-1)
-                if question_id not in previous_questions:
+                if question_id not in previous_question_id:
                     break
             return jsonify({"question": qusetions[question_id].format()})
 
